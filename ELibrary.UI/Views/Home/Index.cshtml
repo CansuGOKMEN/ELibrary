@@ -1,0 +1,88 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Hi";
+
+    List<Country> countries = countryRepository.GetAll();
+}
+<div>
+    <div class="container-fluid my-3">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-body b-b">
+                        <h4>Penalty Calculation</h4>
+                    </div>
+                    <div class="card-body b-b">
+                        <form id="calculate" method="post" autocomplete="off">
+                            @Html.AntiForgeryToken()
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="validationCustom01" class="col-form-label">Check-Out Date</label>
+                                    <div class="input-group">
+                                        <input type="text" name="StartDate" class="date-time-picker form-control" id="validationCustom01" data-options='{"timepicker":false, "format":"m-d-Y"}' value="@(Model?.StartDate)"  required/>
+                                        <span class="input-group-append">
+                                            <span class="input-group-text add-on white">
+                                                <i class="icon-calendar"></i>
+                                            </span>
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="validationCustom02" class="col-form-label">Book Return Date</label>
+                                    <div class="input-group">
+                                        <input type="text" name="EndDate" class="date-time-picker form-control" id="validationCustom02" data-options='{"timepicker":false, "format":"m-d-Y"}' value="@(Model?.EndDate)" required/>
+                                        <span class="input-group-append">
+                                            <span class="input-group-text add-on white">
+                                                <i class="icon-calendar"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="country" class="col-form-label">Country</label>
+                                    <select id="country" name="Country" class="form-control">
+                                        @foreach (Country country in countries)
+                                        {
+                                            <option value="@country.Id">@country.Title</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Calculate</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            
+            @if (ViewBag.result != null)
+            {
+                <div class="col-md-5" id="result">
+                    <h3>Result</h3>
+                    <hr>
+                    @if (ViewBag.result.success)
+                    {
+                        <h3 id="resultText">
+                            Thank you for bringing it back in @Model?.Days days.
+                        </h3>
+
+                    }
+                    else
+                    {
+                        <h3 id="resultAmount">
+                            Sorry.You cannot have this book for @Model?.Days days.For this, you have to pay us @Model?.Amount @Model?.Symbol.
+                        </h3>
+
+                    }
+                    <hr>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+}
